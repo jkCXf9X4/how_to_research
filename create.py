@@ -19,11 +19,11 @@ def count_keys(text : str) -> int:
 
 def main():
     cwd = Path(".")
-    print(f"Pid [{os.getgid()}]")
+    print(f"Pid [{os.getpid()}]")
 
 
     folder = cwd /"parquets_2024_04_22"
-    db_file = folder / "hits.db"
+    db_file = folder / "_hits.db"
 
     # Remove if it exists previously
     if db_file.exists():
@@ -34,34 +34,36 @@ def main():
     with duckdb.connect(db_file.as_posix()) as con:
         # 
 
-        con.sql(f"""CREATE TABLE db AS SELECT DOI, title, abstract, URL, "is-referenced-by-count" FROM read_parquet('{folder}/*.parquet', union_by_name=true);""")
-        # con.sql(f"""CREATE TABLE db AS SELECT DOI, title, abstract, URL, "is-referenced-by-count", count_keys("abstract") FROM read_parquet('{folder}/*.parquet', union_by_name=true);""")
+        con.sql(f"""CREATE TABLE db AS SELECT DOI, title, abstract, URL, "is-referenced-by-count", lower(abstract) FROM read_parquet('{folder}/*.parquet', union_by_name=true);""")
+        con.sql("""ALTER TABLE db RENAME "lower(abstract)" TO  abstract_low """)
 
         con.sql("DESCRIBE db").show()
 
         con.sql("SELECT count(*) from db").show()
 
     print("db created")
+
+    exit()
     with duckdb.connect(db_file.as_posix()) as con:
 
         # descibe schema
         con.sql("DESCRIBE db").show()
-        con.sql("SELECT * from db").show()
+        # con.sql("SELECT * from db").show()
         con.sql("SELECT count(*) from db").show()
 
 
         con.create_function("count_keys", count_keys)
-        con.sql("""CREATE OR REPLACE TABLE db AS SELECT *, count_keys("abstract") FROM db""")
+        con.sql("""CREATE OR REPLACE TABLE db AS SELECT *, count_keys(abstract_low) FROM db""")
+        con.sql("""ALTER TABLE db RENAME "count_keys(abstract_low)" TO  count_keys """)
         # print(hits)
 
-        con.sql("SELECT * from db").show()
+        con.sql("DESCRIBE db").show()
+        con.sql("SELECT count(*) from db").show()
 
-        hits = con.execute("""SELECT * FROM db ORDER BY "count_keys(abstract)" DESC """).fetchone()
-        print(hits)
+        # hits = con.execute("""SELECT * FROM db ORDER BY count_keys DESC """).fetchone()
+        # print(hits)
 
-
-
-
+    print("Done")
 
 
 
