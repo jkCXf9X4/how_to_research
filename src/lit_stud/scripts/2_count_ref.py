@@ -10,11 +10,6 @@ import datetime
 from utils.extract.base import CrossrefJson
 
 
-
-
-
-
-
 def main():
     cwd = Path(".")
     input_dir = cwd / f"data/1_json_2024_04_23"

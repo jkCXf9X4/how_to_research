@@ -2,3 +2,7 @@ duckdb
 matplotlib
 pandas
 scipy
+pytest
+build
+twine
+setuptools
