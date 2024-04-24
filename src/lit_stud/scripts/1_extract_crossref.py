@@ -17,15 +17,6 @@ def main():
 
     print(f"{crossref_folder=} \n {output_dir=}")
 
-    # keywords = "simulating, simulator, modeling, intended use, verification, validation, credibility".split(", ") # 200424_0653
-
-    # model { model, modeling}
-    # simulat { simulate, simulator, simulating}
-    # credib {credibility, credible }
-    # validat {validation, validate }
-    # verif {verify, verification }
-
-    # keywords = "simulat;model;intended use;verif;validat;credib".split(";")
     keywords = "simulat;model".split(";")
     print(f"{keywords=}")
 
