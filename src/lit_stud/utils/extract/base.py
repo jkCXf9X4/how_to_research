@@ -8,6 +8,14 @@ import duckdb
 class CrossrefJson:
 
     @staticmethod
+    def set_defaults(con: duckdb.DuckDBPyConnection, temp_dir = None):
+        con.sql("SET preserve_insertion_order = false;")
+        con.sql("SET threads = 4;")
+        if temp_dir:
+            con.sql("SET temp_directory = '/temp/';")
+        
+
+    @staticmethod
     def print_seq(item, level=0):
         if isinstance(item, list) or isinstance(item, tuple):
             for i in item:
@@ -23,10 +31,9 @@ class CrossrefJson:
         
         """
         # read them 10/100/1000 files at a time
-        step = 100
         steps = [int(i/step) for i in range(0, nr_files, step)]
         max_nr_of_digits = len(str(steps[-1]))
-        print(steps)
+        # print(steps)
 
         def fill_zero(x):
             fill_nr = max_nr_of_digits-len(str(x))
@@ -34,8 +41,8 @@ class CrossrefJson:
 
         steps = [fill_zero(i) for i in steps]
         # steps = ["0000"]
-        print(steps)
-        # exit()
+        # print(steps)
+        return steps
 
     @staticmethod
     def import_jsons(con : duckdb.DuckDBPyConnection, file, select="*"):
@@ -45,15 +52,15 @@ class CrossrefJson:
 
         # unnest(items, recursive:= true)
         query = f"CREATE TABLE db AS SELECT {select} FROM read_json_auto( '{file}', union_by_name=true,  maximum_object_size=224857600);"
-        # print(f"{query=}")
+        print(f"{query=}")
         con.sql(query)
 
     @staticmethod
     def export_json(con : duckdb.DuckDBPyConnection, query, file : Path) :
             duckdb.connect()
-            file.mkdir(parents=True, exist_ok=True)
+            file.parent.mkdir(parents=True, exist_ok=True)
 
-            ext = str(file).split["."][-1]
+            ext = str(file).split(".")[-1]
 
             if ext == "parquet":
                 print(f"{query=}")

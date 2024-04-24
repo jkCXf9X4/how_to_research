@@ -33,23 +33,27 @@ def main():
     nr_files = len(crossref_files)
     print(nr_files)
 
-    steps = CrossrefJson.get_patterns(nr_files, step=100)
+    steps = CrossrefJson.get_patterns(nr_files, step=10)
 
-    steps = steps[:1]
+    steps = steps[:2]
 
-    def extract_files(pattern):
+    arguments = [(crossref_folder / f"{p}*.json.gz", output_dir / f"{p}.json.gz") for p in steps]
+    print(arguments)
+
+    def extract_files(files):
         with duckdb.connect() as c:
-            file = crossref_folder / f"{pattern}*.json.gz"
-            CrossrefJson.import_jsons(c, file, select = "unnest(items, recursive:= true)")
+
+            # file = crossref_folder / f"{pattern}*.json.gz"
+            CrossrefJson.import_jsons(c, files[0], select = "unnest(items, recursive:= true)")
 
             keyword_query = [f"""lower(abstract) LIKE '%{k}%'""" for k in keywords]
             keyword_query = " OR ".join(keyword_query) 
             query = f"""SELECT * FROM db WHERE {keyword_query}"""
 
-            out_file = output_dir / f"{pattern}.json.gz"
-            CrossrefJson.export_json(c, query, out_file)
+            # out_file = output_dir / f"{pattern}.json.gz"
+            CrossrefJson.export_json(c, query, files[1])
 
-    CrossrefJson.pool(extract_files, steps)
+    CrossrefJson.pool(extract_files, arguments)
 
 
 if __name__ == "__main__":
