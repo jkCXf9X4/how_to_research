@@ -33,7 +33,7 @@ def main():
     print("Creating separate file")
     with duckdb.connect(db_file.as_posix()) as con:
 
-        con.sql(f"""CREATE TABLE db AS SELECT *, lower(abstract) FROM read_json_auto( '{folder}/*.json', union_by_name=true,  maximum_object_size=224857600);""")
+        con.sql(f"""CREATE TABLE db AS SELECT *, lower(abstract) FROM read_json_auto( '{folder}/*.json.gz', union_by_name=true,  maximum_object_size=224857600);""")
         # con.sql(f"""CREATE TABLE db AS SELECT DOI, title, abstract, URL, "is-referenced-by-count", count_keys("abstract") FROM read_parquet('{folder}/*.parquet', union_by_name=true);""")
         con.sql("""ALTER TABLE db RENAME "lower(abstract)" TO  abstract_low """)
 
@@ -42,6 +42,8 @@ def main():
         con.sql("SELECT count(*) from db").show()
 
     print("db created")
+    exit()
+
     with duckdb.connect(db_file.as_posix()) as con:
 
         # descibe schema

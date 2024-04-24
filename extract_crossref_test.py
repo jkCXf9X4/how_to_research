@@ -18,11 +18,11 @@ def print_seq(item, level=0):
 
 def main():
     cwd = Path(".")
-    crossref_folder = Path("/media/eriro/storage/crossref/April 2023 Public Data File from Crossref/").resolve()
-    output_dir = cwd / f"json_2024_04_23"
+    crossref_folder = Path("/media/eriro/WD/crossref/April 2023 Public Data File from Crossref/").resolve()
+    output_dir = Path("/media/eriro/WD") / f"json_2024_04_23"
 
     print(f"{crossref_folder=} \n {output_dir=}")
-    output_type = "parquet"
+    output_type = "json"
 
     # json to 
     
@@ -53,9 +53,10 @@ def main():
         fill_nr = max_nr_of_digits-len(str(x))
         return f"{'0'*fill_nr}{x}"
 
-    steps = [fill_zero(i) for i in steps][20:]
-    # steps = ["019"]
+    steps = [fill_zero(i) for i in steps]
+    # steps = ["0000"]
     print(steps)
+    # exit()
 
 
     def extract_files(pattern):
@@ -74,7 +75,7 @@ def main():
                 print(f"{query=}")
                 c.sql(query).write_parquet(str(output_dir/f"{pattern}.parquet"))
             elif output_type =="json":
-                query = f"""COPY ({query}) TO '{ output_dir/ f"{pattern}.json" }';"""
+                query = f"""COPY ({query}) TO '{ output_dir/ f"{pattern}.json.gz" }';"""
                 print(f"{query=}")
                 c.sql(query)
             
