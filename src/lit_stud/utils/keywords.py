@@ -1,4 +1,5 @@
 
+from functools import cache
 from sequence_extensions import list_ext
 
 class KeywordGroup:
@@ -11,11 +12,16 @@ class KeywordGroup:
     def __repr__(self) -> str:
         return f"{self.name}: [{self.weight}] - {' '.join(self.words)}"
     
-    def contains(self, text):
+    @cache
+    def get_value(self, text):
         for i in self.words:
             if i in text:
                 return self.weight
         return 0
+    
+    def contains(self, text):
+        return self.get_value(text) != 0
+            
             
 
 class KeywordGroups(list):
@@ -24,7 +30,7 @@ class KeywordGroups(list):
         value = 0
         for key_group in self:
             key_group : KeywordGroup
-            value += key_group.contains(text)
+            value += key_group.get_value(text)
         return value
     
     def __repr__(self) -> str:

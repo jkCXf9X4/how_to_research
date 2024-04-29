@@ -11,7 +11,7 @@ from lit_stud.utils.extract.crossref import CrossrefJson
 
 def main():
     cwd = Path(".")
-    input_dir = cwd / f"data/2_json_2024_04_23"
+    input_dir = cwd / f"data/2_json_2024_04_29"
     db_file = input_dir / "_hits.db"
 
     # Remove if it exists previously
@@ -27,8 +27,9 @@ def main():
         file = input_dir / f"*.json.gz"
         CrossrefJson.import_jsons(c, file, select = "*")
 
-        # c.sql("DESCRIBE db").show()
-        # c.sql("SELECT abstract, count_keys FROM db ORDER BY count_keys DESC ").show()
+        c.sql("DESCRIBE db").show()
+        c.sql("SELECT count(*) FROM db ").show()
+        c.sql("SELECT abstract, count_keys FROM db ORDER BY count_keys DESC ").show()
 
 
 

@@ -14,16 +14,16 @@ from lit_stud.utils.os.files import FileUtils
 
 def main():
     cwd = Path(".")
-    input_dir = cwd / f"data/2_json_2024_04_23"
+    input_dir = cwd / f"data/2_json_2024_04_29"
     db_file = input_dir / "_hits.db"
 
-    ouput_dir = cwd / f"data/3_chatgpt_2024_04_24"
+    ouput_dir = cwd / f"data/3_chatgpt_2024_04_29"
     ouput_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"{input_dir=}")
 
     chatgpt_files = [i.name for i in os.scandir(ouput_dir)]
-    print(chatgpt_files)
+    # print(chatgpt_files)
 
     with duckdb.connect(db_file.as_posix()) as c:
         CrossrefJson.set_defaults(c)
@@ -32,9 +32,10 @@ def main():
         where = ""
         # where = "WHERE DOI='10.1149/ma2022-02391368mtgabs'"
 
-        abstracts = c.sql(f"SELECT DOI, title, abstract, count_keys FROM db {where} ORDER BY count_keys DESC ").fetchall()
+        abstracts = c.sql(f"SELECT DOI, title, abstract, count_keys FROM db {where} ORDER BY count_keys DESC").fetchall()
         print(len(abstracts))
         # abstracts = abstracts[:160]
+        # exit()
 
         for doi, title, abstract, keys in abstracts:
             if FileUtils.doi_filename(doi) in chatgpt_files:
@@ -44,9 +45,11 @@ def main():
                 abstract = Abstract(abstract)
                 abstract_text = abstract.get_text()
 
-                full_text = f"""I'm writing a article on evaluating model credibility and model intended use in the context of simulating complex systems like aircrafts, cars or telecom networks eith a focus on verification and validation. How well does this abtract fit into this category, can you estimate the fit in percentage in the format "Abstract fit: %"
+                full_text = f"""I'm writing an article on evaluating model credibility and model intended use in the context of large scale simulations, cyber-physical systems and model-based system engineering. A focus is on simulating complex systems like aircrafts, cars or telecom networks. How well does this abstract fit into this category, can you estimate the fit in percentage in the format "Abstract fit: %" and provide a 100 word summary of your motivation
 
 {title}, {abstract_text}"""
+                
+                print(abstract_text)
                 
                 query = ChatGPTWrapper(full_text)
                 query.query()
@@ -55,6 +58,7 @@ def main():
                 print(query.get_content())
 
                 query.save_query(ouput_dir/  FileUtils.doi_filename(doi))
+                exit()
 
         
         # print(word_counter)

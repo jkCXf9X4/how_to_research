@@ -7,6 +7,7 @@ class Abstract:
     spaces = re.compile('[ ]+') 
     newlines = re.compile('[ ]*[\n]+[ ]*') 
     tabs = re.compile('[\t]+') 
+    picture = re.compile('[\S]{200,}') 
 
     @staticmethod
     def cleanhtml(raw_html):
@@ -16,6 +17,7 @@ class Abstract:
         cleantext = re.sub(Abstract.tabs, ' ', cleantext)
         cleantext = re.sub(Abstract.newlines, '\n', cleantext)
         cleantext = re.sub(Abstract.spaces, ' ', cleantext)
+        cleantext = re.sub(Abstract.picture, ' ', cleantext)
 
         # should strip images
         # maybe use words that are lomger than 200 chars or similar

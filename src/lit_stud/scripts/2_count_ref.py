@@ -26,7 +26,7 @@ def main():
     groups.append(KeywordGroup("cba", ["cba", "certification by analysis"], weight=1))
     groups.append(KeywordGroup("twin", ["digital twin", "digital shadow"], weight=1))
     groups.append(KeywordGroup("cosim", ["co-simulation", "cosimulation"], weight=1))
-    groups.append(KeywordGroup("fidelity", ["fidelity"], weight=0.5))
+    groups.append(KeywordGroup("fidelity", ["fidelity"], weight=1))
     groups.append(KeywordGroup("method", ["methodology"], weight=0.5))
     groups.append(KeywordGroup("lls", ["large-scale simulator", "large-scale simulation"], weight=1))
     groups.append(KeywordGroup("mbse", ["mbse", "model-based system engineering"], weight=1))
@@ -35,18 +35,18 @@ def main():
 
     print(f"{groups=}")
 
-    def count_keys(text : str) -> int:
-        return groups.evaluate_keywords(text)
-
     crossref_files = [Path(i.path) for i in os.scandir(input_dir)]
     nr_files = len(crossref_files)
     print(nr_files)
 
     steps = CrossrefJson.get_patterns(nr_files, step=10)
 
-    steps = steps[:1]
+    steps = steps[16:]
     print(steps)
+    # exit()
 
+    def count_keys(text : str) -> int:
+        return round(groups.evaluate_keywords(text))
 
     def extract_files(pattern):
         with duckdb.connect() as c:
@@ -65,16 +65,19 @@ def main():
             c.sql("""ALTER TABLE db RENAME "count_keys(abstract_low)" TO  count_keys """)
             # print(hits)
 
-            c.sql("DESCRIBE db").show()
+            # c.sql("DESCRIBE db").show()
             # c.sql("SELECT count(*) from db").show()
-            # c.sql("SELECT count(*) from db WHERE count_keys>4").show()
             c.sql("SELECT count(*) from db WHERE count_keys>4").show()
+            # c.sql("SELECT abstract, count_keys from db ORDER BY count_keys DESC").show()
 
 
             out_file = output_dir / f"{pattern}.json.gz"
             CrossrefJson.export_json(c, "SELECT * FROM db WHERE count_keys>4", out_file)
 
-    CrossrefJson.pool(extract_files, steps)
+    for s in steps:
+        extract_files(s)
+
+    # CrossrefJson.pool(extract_files, steps)
 
 
 if __name__ == "__main__":

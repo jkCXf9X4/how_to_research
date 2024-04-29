@@ -38,9 +38,9 @@ class ChatGPTWrapper:
          return self.answer["choices"][0]["message"]["content"]
     
     def add_info(self, **kwargs):
-        self.answer = self.answer.extend(**kwargs)
+        self.answer = self.answer.extend(kwargs)
     
     def save_query(self, path):
         with open(path, "w") as f:
-                    json.dump(self.answer, f, indent=4)
+            json.dump(self.answer, f, indent=4)
 
