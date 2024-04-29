@@ -1,6 +1,6 @@
 import pytest
 
-from lit_stud.utils.abstract import cleanhtml
+from lit_stud.utils.abstract import Abstract
 
 
 def test_clean_data():
@@ -19,6 +19,6 @@ Our approach uses two drivers to model the demand for public charging infrastruc
 The method is compared and validated with alternative approaches on several levels. First, the allocation of parking space based on the raster calculation is validated against parking space numbers available in OSM. Second, the modeling of charging points supposed to compensate for the lack of home charging opportunities is contrasted with a simplified procedure by means of an analysis of multifamily housing density. In the third validation step, the method is compared to an existing machine learning model that estimates spatial suitability for charging stations. This model is trained with numerous input datasets such as population density and POIs on the one hand and utilization data of existing charging stations on the other hand. The objective of these comparisons is both to generally verify our models validity and to investigate the relative influence of specific components of the model.
 The identification of potential charging points in public spaces plays an important role in modeling the future energy system especially the power grid as the rapid adoption of electric vehicles will shift locations of demand for electricity. With our investigation, we want to present a new method to simulate future public charging point locations and show the influences of different modeling methods."""
 
-    output_text = cleanhtml(text)
+    output_text = Abstract.cleanhtml(text)
 
     # assert output_text == reference_text

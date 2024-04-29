@@ -7,13 +7,7 @@ import duckdb
 import concurrent.futures
 import datetime
 
-from utils.extract.base import CrossrefJson
-
-
-
-
-
-
+from lit_stud.utils.extract.crossref import CrossrefJson
 
 def main():
     cwd = Path(".")
@@ -25,10 +19,6 @@ def main():
         db_file.unlink()
 
     print(f"{input_dir=}")
-
-    keywords = "simulating;simulator;simulate;model;modeling;intended use;verification;verify;validation;validate;credibility;credible".split(";")
-
-    print(f"{keywords=}")
 
 
     with duckdb.connect(db_file.as_posix()) as c:

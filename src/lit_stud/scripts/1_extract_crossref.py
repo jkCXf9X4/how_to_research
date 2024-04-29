@@ -7,7 +7,7 @@ import duckdb
 import concurrent.futures
 import datetime
 
-from utils.extract.base import CrossrefJson
+from lit_stud.utils.extract.crossref import CrossrefJson
 
 
 def main():
