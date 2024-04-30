@@ -49,7 +49,7 @@ def main():
 
 {title}, {abstract_text}"""
                 
-                print(abstract_text)
+                # print(abstract_text)
                 
                 query = ChatGPTWrapper(full_text)
                 query.query()
@@ -58,7 +58,7 @@ def main():
                 print(query.get_content())
 
                 query.save_query(ouput_dir/  FileUtils.doi_filename(doi))
-                exit()
+                # exit()
 
         
         # print(word_counter)
