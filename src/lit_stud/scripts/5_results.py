@@ -13,8 +13,13 @@ from lit_stud.utils.os.files import FileUtils
 
 def main():
     cwd = Path(".")
-    input_dir = cwd / f"data/4_chatgpt_2024_04_29"
-    output_dir = cwd / f"data/5_chatgpt_2024_04_29"
+    step = "3.5"
+    if step == "3.5":
+        input_dir = cwd / f"data/4_chatgpt_2024_04_29"
+        output_dir = cwd / f"data/5_chatgpt_2024_04_29"
+    elif step == "4":
+        input_dir = cwd / f"data/6_chatgpt_2024_04_29"
+        output_dir = cwd / f"data/7_chatgpt_2024_04_29"
 
     shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True)

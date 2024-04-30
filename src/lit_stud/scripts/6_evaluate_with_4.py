@@ -28,14 +28,18 @@ def main():
     ConfigLogUtils.log_config(output_dir / "_log.json", logs)
 
     processed_chatgpt_files = [i.name for i in os.scandir(output_dir)]
-    print(processed_chatgpt_files)
+    # print(processed_chatgpt_files)
 
     for f_path in chatgpt_files:
 
         with open(f_path, "r") as f:
 
             result = json.load(f)
-            doi = result["DOI"]
+            try:
+                doi = result["DOI"]
+            except:
+                print(f"Failed to open {f_path}")
+                continue
 
             if FileUtils.doi_filename(doi) in processed_chatgpt_files:
                 print(f"Skipping {doi}")
