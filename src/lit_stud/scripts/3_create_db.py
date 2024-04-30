@@ -1,13 +1,9 @@
 
-import gzip
-import os
 from pathlib import Path
-import traceback
 import duckdb
-import concurrent.futures
-import datetime
 
-from lit_stud.utils.extract.crossref import CrossrefJson
+from lit_stud.utils.crossref_db import CrossrefJson
+from lit_stud.utils.duckdb import CrossrefDuckDB
 
 def main():
     cwd = Path(".")
@@ -20,19 +16,17 @@ def main():
 
     print(f"{input_dir=}")
 
+    db = CrossrefDuckDB(db_file)
 
-    with duckdb.connect(db_file.as_posix()) as c:
-        CrossrefJson.set_defaults(c)
+    with db.get_connection() as c:
 
         file = input_dir / f"*.json.gz"
         CrossrefJson.import_jsons(c, file, select = "*")
 
-        c.sql("DESCRIBE db").show()
-        c.sql("SELECT count(*) FROM db ").show()
         c.sql("SELECT abstract, count_keys FROM db ORDER BY count_keys DESC ").show()
 
-
-
+    db.descibe()
+    db.count()
 
 if __name__ == "__main__":
     main()

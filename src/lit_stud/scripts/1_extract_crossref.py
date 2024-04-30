@@ -1,13 +1,9 @@
 
-import gzip
 import os
 from pathlib import Path
-import traceback
 import duckdb
-import concurrent.futures
-import datetime
 
-from lit_stud.utils.extract.crossref import CrossrefJson
+from lit_stud.utils.crossref_db import CrossrefJson
 
 
 def main():

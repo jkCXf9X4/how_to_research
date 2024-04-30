@@ -2,13 +2,13 @@
 import os
 from pathlib import Path
 import duckdb
-import json
 
 from lit_stud.utils.chatgpt import ChatGPTWrapper
-from lit_stud.utils.extract.crossref import CrossrefJson
+from lit_stud.utils.crossref_db import CrossrefJson
 
 
 from lit_stud.utils.abstract import Abstract
+from lit_stud.utils.duckdb import CrossrefDuckDB
 from lit_stud.utils.os.files import FileUtils
 
 
@@ -17,7 +17,7 @@ def main():
     input_dir = cwd / f"data/2_json_2024_04_29"
     db_file = input_dir / "_hits.db"
 
-    ouput_dir = cwd / f"data/3_chatgpt_2024_04_29"
+    ouput_dir = cwd / f"data/3_chatgpt_2024_04_30"
     ouput_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"{input_dir=}")
@@ -25,43 +25,38 @@ def main():
     chatgpt_files = [i.name for i in os.scandir(ouput_dir)]
     # print(chatgpt_files)
 
-    with duckdb.connect(db_file.as_posix()) as c:
-        CrossrefJson.set_defaults(c)
+    db = CrossrefDuckDB(db_file)
+    db.descibe()
+    db.count()
 
-        c.sql("DESCRIBE db").show()
-        where = ""
-        # where = "WHERE DOI='10.1149/ma2022-02391368mtgabs'"
+    abstracts = db.get_abstracts()
+    # abstracts = abstracts[:160]
 
-        abstracts = c.sql(f"SELECT DOI, title, abstract, count_keys FROM db {where} ORDER BY count_keys DESC").fetchall()
-        print(len(abstracts))
-        # abstracts = abstracts[:160]
-        # exit()
+    print(len(abstracts))
+    # print(abstracts[1])
 
-        for doi, title, abstract, keys in abstracts:
-            if FileUtils.doi_filename(doi) in chatgpt_files:
-                print(f"Skipping {doi}")
-            else:
-                print(f"{doi}\n{title}\n{keys}")
-                abstract = Abstract(abstract)
-                abstract_text = abstract.get_text()
+    for doi, title, abstract, keys in abstracts:
+        if FileUtils.doi_filename(doi) in chatgpt_files:
+            print(f"Skipping {doi}")
+        else:
+            print(f"{doi}\n{title}\n{keys}")
+            abstract = Abstract(abstract)
+            abstract_text = abstract.get_text()
 
-                full_text = f"""I'm writing an article on evaluating model credibility and model intended use in the context of large scale simulations, cyber-physical systems and model-based system engineering. A focus is on simulating complex systems like aircrafts, cars or telecom networks. How well does this abstract fit into this category, can you estimate the fit in percentage in the format "Abstract fit: %" and provide a 100 word summary of your motivation
+            full_text = f"""I'm writing an article on evaluating model credibility and model intended use in the context of large scale simulations, cyber-physical systems and model-based system engineering. A focus is on simulating complex systems like aircrafts, cars or telecom networks. How well does this abstract fit into this category, can you estimate the fit in percentage in the format "Abstract fit: %" and provide a 100 word summary of your motivation
 
 {title}, {abstract_text}"""
-                
-                # print(abstract_text)
-                
-                query = ChatGPTWrapper(full_text)
-                query.query()
-                query.add_info(DOI=doi, title=title, abstract=abstract_text )
+            
+            # print(abstract_text)
+            
+            query = ChatGPTWrapper(full_text)
+            query.query()
+            query.add_info(DOI=doi, title=title, abstract=abstract_text )
 
-                print(query.get_content())
+            print(query.get_content())
 
-                query.save_query(ouput_dir/  FileUtils.doi_filename(doi))
-                # exit()
-
-        
-        # print(word_counter)
+            query.save_query(ouput_dir/  FileUtils.doi_filename(doi))
+            # exit()
 
 
 if __name__ == "__main__":

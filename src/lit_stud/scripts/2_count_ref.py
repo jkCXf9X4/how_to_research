@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 import duckdb
 
-from lit_stud.utils.extract.crossref import CrossrefJson
+from lit_stud.utils.crossref_db import CrossrefJson
 from lit_stud.utils.keywords import KeywordGroup, KeywordGroups
 
 
