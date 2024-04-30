@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import duckdb
 
+from lit_stud.utils.config_log import ConfigLogUtils
 from lit_stud.utils.crossref_db import CrossrefJson
 from lit_stud.utils.keywords import KeywordGroup, KeywordGroups
 
@@ -34,6 +35,9 @@ def main():
     groups.append(KeywordGroup("rts", ["real-time simulators", "rts"], weight=1))
 
     print(f"{groups=}")
+
+    logs = {"input": input_dir, "output": output_dir, "groups": groups}
+    ConfigLogUtils.log_config(output_dir / "_log.json", logs)
 
     crossref_files = [Path(i.path) for i in os.scandir(input_dir)]
     nr_files = len(crossref_files)

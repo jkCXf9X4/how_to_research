@@ -3,18 +3,22 @@ import os
 from pathlib import Path
 import duckdb
 
+from lit_stud.utils.config_log import ConfigLogUtils
 from lit_stud.utils.crossref_db import CrossrefJson
 
 
 def main():
     cwd = Path(".")
     crossref_folder = Path("/media/eriro/WD/crossref/April 2023 Public Data File from Crossref/").resolve()
-    output_dir = Path("./test") / f"json_2024_04_23"
+    output_dir = cwd / "data" / f"1_json_2024_04_23"
 
     print(f"{crossref_folder=} \n {output_dir=}")
 
     keywords = "simulat;model".split(";")
     print(f"{keywords=}")
+
+    logs = {"crossref_folder": crossref_folder, "output": output_dir, "keywords": keywords}
+    ConfigLogUtils.log_config(output_dir / "_log.json", logs)
 
     crossref_files = [Path(i.path) for i in os.scandir(crossref_folder)]
     nr_files = len(crossref_files)

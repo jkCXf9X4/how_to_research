@@ -4,6 +4,7 @@ from pathlib import Path
 import duckdb
 
 from lit_stud.utils.chatgpt import ChatGPTWrapper
+from lit_stud.utils.config_log import ConfigLogUtils
 from lit_stud.utils.crossref_db import CrossrefJson
 
 
@@ -14,15 +15,16 @@ from lit_stud.utils.os.files import FileUtils
 
 def main():
     cwd = Path(".")
-    input_dir = cwd / f"data/2_json_2024_04_29"
-    db_file = input_dir / "_hits.db"
+    input_dir = cwd / f"data/3_db_2024_04_29"
+    db_file = input_dir / "hits.db"
 
-    ouput_dir = cwd / f"data/3_chatgpt_2024_04_30"
-    ouput_dir.mkdir(parents=True, exist_ok=True)
+    output_dir = cwd / f"data/4_chatgpt_2024_04_29"
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"{input_dir=}")
+    logs = {"input": input_dir, "output": output_dir, "db_file": db_file}
+    ConfigLogUtils.log_config(output_dir / "_log.json", logs)
 
-    chatgpt_files = [i.name for i in os.scandir(ouput_dir)]
+    chatgpt_files = [i.name for i in os.scandir(output_dir)]
     # print(chatgpt_files)
 
     db = CrossrefDuckDB(db_file)
@@ -45,7 +47,8 @@ def main():
 
             full_text = f"""I'm writing an article on evaluating model credibility and model intended use in the context of large scale simulations, cyber-physical systems and model-based system engineering. A focus is on simulating complex systems like aircrafts, cars or telecom networks. How well does this abstract fit into this category, can you estimate the fit in percentage in the format "Abstract fit: %" and provide a 100 word summary of your motivation
 
-{title}, {abstract_text}"""
+Title: {title}
+Abstract: {abstract_text}"""
             
             # print(abstract_text)
             
@@ -55,7 +58,7 @@ def main():
 
             print(query.get_content())
 
-            query.save_query(ouput_dir/  FileUtils.doi_filename(doi))
+            query.save_query(output_dir/  FileUtils.doi_filename(doi))
             # exit()
 
 

@@ -1,4 +1,5 @@
 
+import re
 import keyring
 import json
 from openai import OpenAI
@@ -43,4 +44,5 @@ class ChatGPTWrapper:
     def save_query(self, path):
         with open(path, "w") as f:
             json.dump(self.answer, f, indent=4)
+
 
