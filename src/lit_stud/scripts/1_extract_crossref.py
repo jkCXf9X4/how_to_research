@@ -18,7 +18,7 @@ def main():
     print(f"{keywords=}")
 
     logs = {"crossref_folder": crossref_folder, "output": output_dir, "keywords": keywords}
-    ConfigLogUtils.log_config(output_dir / "_log.json", logs)
+    ConfigLogUtils.log_config(output_dir/ "logs" / "args.json", logs)
 
     crossref_files = [Path(i.path) for i in os.scandir(crossref_folder)]
     nr_files = len(crossref_files)

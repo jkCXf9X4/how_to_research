@@ -22,7 +22,7 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     logs = {"input": input_dir, "output": output_dir, "db_file": db_file}
-    ConfigLogUtils.log_config(output_dir / "_log.json", logs)
+    ConfigLogUtils.log_config(output_dir/ "logs" / "args.json", logs)
 
     chatgpt_files = [i.name for i in os.scandir(output_dir)]
     # print(chatgpt_files)

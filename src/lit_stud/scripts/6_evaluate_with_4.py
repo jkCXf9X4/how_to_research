@@ -18,14 +18,14 @@ def main():
     cwd = Path(".")
     input_dir = cwd / f"data/5_chatgpt_2024_04_29"
 
-
     output_dir = cwd / f"data/6_chatgpt_4_2024_04_29"
     output_dir.mkdir(parents=True, exist_ok=True)
+
     chatgpt_files = [input_dir / i.name for i in os.scandir(input_dir)]
     print(f"Total nr of files: {len(chatgpt_files)}")
 
     logs = {"input": input_dir, "output": output_dir, "chatgpt_input_files" : chatgpt_files}
-    ConfigLogUtils.log_config(output_dir / "_log.json", logs)
+    ConfigLogUtils.log_config(output_dir/ "logs" / "args.json", logs)
 
     processed_chatgpt_files = [i.name for i in os.scandir(output_dir)]
     # print(processed_chatgpt_files)

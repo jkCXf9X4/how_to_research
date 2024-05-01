@@ -40,7 +40,7 @@ class CrossrefDuckDB:
             """
 
             if connection:
-                 return connection.sql(f"SELECT * FROM db WHERE DOI='{doi}'").fetchone()
+                 return connection.sql(f"SELECT {selection} FROM db WHERE DOI='{doi}'").fetchone()
             else:
                 with self.get_connection() as c:
-                    return c.sql(f"SELECT * FROM db WHERE DOI='{doi}'").fetchone()
+                    return c.sql(f"SELECT {selection} FROM db WHERE DOI='{doi}'").fetchone()

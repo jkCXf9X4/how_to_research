@@ -37,7 +37,7 @@ def main():
     print(f"{groups=}")
 
     logs = {"input": input_dir, "output": output_dir, "groups": groups}
-    ConfigLogUtils.log_config(output_dir / "_log.json", logs)
+    ConfigLogUtils.log_config(output_dir/ "logs" / "args.json", logs)
 
     crossref_files = [Path(i.path) for i in os.scandir(input_dir)]
     nr_files = len(crossref_files)
