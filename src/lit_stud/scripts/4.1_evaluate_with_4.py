@@ -16,9 +16,9 @@ from lit_stud.utils.os.files import FileUtils
 
 def main():
     cwd = Path(".")
-    input_dir = cwd / f"data/5_chatgpt_2024_04_29"
+    input_dir = cwd / f"data/4.0_chatgpt_2024_04_29"
 
-    output_dir = cwd / f"data/6_chatgpt_4_2024_04_29"
+    output_dir = cwd / f"data/4.1_chatgpt_4_2024_04_29"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     chatgpt_files = [input_dir / i.name for i in os.scandir(input_dir)]

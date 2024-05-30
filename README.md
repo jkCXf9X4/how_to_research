@@ -9,7 +9,7 @@ it will add zeros in the beginning of all names so that they are all equal lengt
 2. run ./scripts/create_env.sh
 3. activate the env, using ./scripts/set_env.sh
 
-Then fin the src/lit_stud/scripts folder and start going thru the steps.
+Then find the src/lit_stud/scripts folder and start going thru the steps.
 
 
 # src/lit_stud/scripts/1_extract_crossref.py
@@ -21,11 +21,14 @@ narrow search using multiple keywords, about 1h
 # src/lit_stud/scripts/3_create_db.py
 create a db file of the results -  about 2min
 
-# src/lit_stud/scripts/4_evaluate.py 
+# src/lit_stud/scripts/4.0_evaluate.py 
 evaluate using ChatGPT 3.5 - 0.5-2h
 
-# src/lit_stud/scripts/5_results.py
-Plot results, use this one after step 6 as well
-
-# src/lit_stud/scripts/6_evaluate_with_4.py
+# src/lit_stud/scripts/4.1_evaluate_with_4.py
 evaluate using ChatGPT 4 - 1-4h
+
+# src/lit_stud/scripts/5_parse_results.py
+Extract match from chatgpt answers and save the results
+
+# src/lit_stud/scripts/6_rate_abstractions.py
+Read shit and rate the answers
